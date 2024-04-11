@@ -2,7 +2,7 @@
 *.d
 
 # Compiled Object files
-*.slo
+*.vsidx
 *.lo
 *.o
 *.obj
