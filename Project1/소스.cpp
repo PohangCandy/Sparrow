@@ -1,47 +1,49 @@
 #include <iostream>
-#include "¼Ò½º.h"
+
 using namespace std;
-class Point {
-	int x = 0;
-	int y = 0;
+
+class PizzaStore {
+	int pizza_size;
 
 public:
-	int getposX();
-	int getposY();
-	void setposX(int newPosX);
-	void setposY(int newPosY);
+
+	PizzaStore(int psize) :pizza_size{ psize }
+	{
+	}
+
+	int getPizzaSize()
+	{
+		return pizza_size;
+	}
+
+	void setPizzaSize(int newSize)
+	{
+		pizza_size = newSize;
+	}
+	void print();
 };
 
-int Point::getposX()
+void sizeUP(PizzaStore &P)
 {
-	return x;
+	P.setPizzaSize(P.getPizzaSize() * 2);
 }
 
-int Point::getposY()
+void PizzaStore::print()
 {
-	return y;
+	cout << getPizzaSize();
 }
 
-void Point::setposX(int newPosX)
+PizzaStore returnPizzaObj()
 {
-	x = newPosX;
-}
-
-void Point::setposY(int newPosY)
-{
-	y = newPosY;
+	PizzaStore p{20};
+		return p;
 }
 
 int main()
 {
-	Point a;
-	int newPosx;
-	cin >> newPosx;
-	a.setposX(newPosx);
-	cout << a.getposX()<<endl;
-	cout << a.getposY();
-
-
+	PizzaStore P{ 10 };
+	P = returnPizzaObj();
+	P.print();
 
 	return 0;
 }
