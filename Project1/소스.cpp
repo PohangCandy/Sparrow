@@ -1,59 +1,50 @@
-#include <Windows.h>
-#include <conio.h>
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
-class Circle {
+class Contact {
+	string name;
+	string tel;
+
 public:
-	Circle() : x(0), y(0), radius(0) {};
-	Circle(int _x, int _y, int _radius) : x(_x), y(_y), radius(_radius) {};
-	void draw();
-private:
-	int x, y;
-	int radius;
-public:
-	int GetXpos() { return x; }
-	int GetYpos() { return y; }
-	int GetRadius() { return radius; }
-	void SetXpos(int newXpos) { x = newXpos; }
-	void SetYpos(int newYpos) { y = newYpos; }
-	void SetRadius(int newRadius) { radius = newRadius; }
+	Contact(string _name,string _tel): tel(_tel),name(_name) {}
+	string GetName() { return name; }
+	string GetTel() { return tel; }
+	void SetName(string newName) { name = newName; }
+	void SetTel(string newTel) { tel = newTel; }
 };
 
 int main() {
 
-	Circle circles[10];
-	while (true)
+	vector<Contact> v;
+
+	for (int i = 0 ; i < 3 ; i ++)
 	{
-		for (Circle& c : circles)
-		{
-			c.SetXpos(rand() % 500);
-			c.SetYpos(rand() % 300);
-			c.SetRadius(rand() % 100);
-			c.draw();
-		}
-		char ch = _getch();
-		if (ch == 'q')
-		{
-			break;
-		}
-		if (ch == 'm')
-		{
-			for (Circle& c : circles)
-			{
-				c.SetXpos(c.GetXpos() + 1000);
-				c.draw();
-			}
-		}
+		string newname;
+		string newtel;
+
+		cout << "이름을 입력하시오 : ";
+		cin >> newname;
+		
+
+		cout << "전화번호를 입력하시오 : ";
+		cin >> newtel;
+		
+		v.push_back(Contact(newname, newtel));
 	}
 
+	string FindName;
+	cout << "탐색하고 싶은 이름을 고르시오 : ";
+	cin >> FindName;
 
+	for (auto& a : v)
+	{
+		if (a.GetName() == FindName)
+			cout << "전화번호: " << a.GetTel();
+			break;
+	}
+
+	return 0;
 }
 
-void Circle::draw()
-{
-	int r = radius / 2;
-	HDC hdc = GetWindowDC(GetForegroundWindow());
-	Ellipse(hdc, x - r, y - r, x + r, y + r);
-}
