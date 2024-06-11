@@ -1,50 +1,24 @@
-#include <iostream>
-#include <vector>
+#include <SFML/Graphics.hpp>
 
-using namespace std;
+int main()
+{
+    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
+    sf::CircleShape shape(100.f);
+    shape.setFillColor(sf::Color::Green);
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
 
-class Contact {
-	string name;
-	string tel;
+        window.clear();
+        window.draw(shape);
+        window.display();
+    }
 
-public:
-	Contact(string _name,string _tel): tel(_tel),name(_name) {}
-	string GetName() { return name; }
-	string GetTel() { return tel; }
-	void SetName(string newName) { name = newName; }
-	void SetTel(string newTel) { tel = newTel; }
-};
-
-int main() {
-
-	vector<Contact> v;
-
-	for (int i = 0 ; i < 3 ; i ++)
-	{
-		string newname;
-		string newtel;
-
-		cout << "이름을 입력하시오 : ";
-		cin >> newname;
-		
-
-		cout << "전화번호를 입력하시오 : ";
-		cin >> newtel;
-		
-		v.push_back(Contact(newname, newtel));
-	}
-
-	string FindName;
-	cout << "탐색하고 싶은 이름을 고르시오 : ";
-	cin >> FindName;
-
-	for (auto& a : v)
-	{
-		if (a.GetName() == FindName)
-			cout << "전화번호: " << a.GetTel();
-			break;
-	}
-
-	return 0;
+    return 0;
 }
 
