@@ -52,6 +52,7 @@ int main()
 				dx = -dx;
 			}
 		}
+
 		ball_pos.y += dy;
 		for (int i = 0; i < blocks.size(); i++) {
 			if (FloatRect(ball_pos.x + 3, ball_pos.y + 3, 6, 6).intersects(blocks[i].getGlobalBounds()))
