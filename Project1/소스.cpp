@@ -1,91 +1,100 @@
-#include <SFML/Graphics.hpp>
-#include <vector>
+#include <iostream>
+#include <string>
 #include <time.h>
+#include <SFML/Graphics.hpp>
 using namespace sf;
+using namespace std;
+
+class Tile {
+public:
+	bool open;
+	int number;
+};
+
+const int TILE_SIZE = 35;
+const int BOMB = 9;
+const int HIDDEN = 10;
 
 int main()
 {
 	srand(time(NULL));
+	RenderWindow app(VideoMode(400, 400), "Minesweeper");
 
-	RenderWindow window(VideoMode(600, 480), "BREAKOUT");
-	window.setFramerateLimit(60);
+	Sprite sprites[12];
+	Texture t[12];
+	for (int k = 0; k < 12; k++) {
+		t[k].loadFromFile("images/tile" + to_string(k) + ".png");
+		sprites[k].setTexture(t[k]);
+	}
 
-	Texture t1, t2, t3, t4;
-	t1.loadFromFile("images/block.png");
-	t2.loadFromFile("images/background_ball.png");
-	t3.loadFromFile("images/ball.png");
-	t4.loadFromFile("images/paddle.png");
+	Tile grid[12][12];
+	bool game_ended = false;
 
-	Sprite background(t2), ball(t3), paddle(t4);
-	paddle.setPosition(300, 460);
-
-	const int size = 100;
-	std::vector<Sprite> blocks(100);
-	int n = 0;
-	auto bsize = t1.getSize();
-	for (int i = 1; i <= 10; i++)
+	for (int i = 1; i <= 10; i++) {
 		for (int j = 1; j <= 10; j++)
 		{
-			blocks[n].setTexture(t1);
-			blocks[n].setPosition(i * bsize.x, j * bsize.y);
-			n++;
+			grid[i][j].open = false;
+			grid[i][j].number = 0;
+			if ((rand() % 10) == 1)
+				grid[i][j].number = BOMB;
 		}
+	}
 
-	float dx = 3, dy = 3;
+	for (int i = 1; i <= 10; i++) {
+		for (int j = 1; j <= 10; j++)
+		{
+			int n = 0;
+			if (grid[i][j].number == BOMB) 				continue;
+			if (grid[i + 1][j].number == BOMB) n++;
+			if (grid[i][j + 1].number == BOMB) n++;
+			if (grid[i - 1][j].number == BOMB) n++;
+			if (grid[i][j - 1].number == BOMB) n++;
+			if (grid[i + 1][j + 1].number == BOMB) n++;
+			if (grid[i - 1][j - 1].number == BOMB) n++;
+			if (grid[i - 1][j + 1].number == BOMB) n++;
+			if (grid[i + 1][j - 1].number == BOMB) n++;
+			grid[i][j].number = n;
+		}
+	}
 
-	while (window.isOpen())
+	while (app.isOpen())
 	{
+		Vector2i pos = Mouse::getPosition(app);
+		int x = pos.x / TILE_SIZE;
+		int y = pos.y / TILE_SIZE;
+
 		Event e;
-		while (window.pollEvent(e))
+		while (app.pollEvent(e))
 		{
 			if (e.type == Event::Closed)
-				window.close();
+				app.close();
+
+			if (e.type == Event::MouseButtonPressed)
+				if (e.key.code == Mouse::Left) {
+					grid[x][y].open = true;
+					if (grid[x][y].number == BOMB) game_ended = true;
+				}
 		}
 
-		auto ball_pos = ball.getPosition();
-
-		ball_pos.x += dx;
-		for (int i = 0; i < blocks.size(); i++) {
-			if (FloatRect(ball_pos.x + 3, ball_pos.y + 3, 6, 6).intersects(blocks[i].getGlobalBounds()))
+		app.clear(Color::White);
+		for (int i = 1; i <= 10; i++) {
+			for (int j = 1; j <= 10; j++)
 			{
-				blocks.erase(blocks.begin() + i);
-				dx = -dx;
+				int n;
+				if (grid[i][j].open == false && game_ended == false)
+					n = HIDDEN;
+				else
+					n = grid[i][j].number;
+				sprites[n].setPosition(TILE_SIZE * i, TILE_SIZE * j);
+				app.draw(sprites[n]);
 			}
 		}
-
-		ball_pos.y += dy;
-		for (int i = 0; i < blocks.size(); i++) {
-			if (FloatRect(ball_pos.x + 3, ball_pos.y + 3, 6, 6).intersects(blocks[i].getGlobalBounds()))
-			{
-				blocks.erase(blocks.begin() + i);
-				dy = -dy;
-			}
-		}
-
-		if (ball_pos.x < 0 || ball_pos.x>520)  dx = -dx;
-		if (ball_pos.y < 0 || ball_pos.y>450)  dy = -dy;
-
-		if (Keyboard::isKeyPressed(Keyboard::Right))
-			paddle.move(5, 0);
-		if (Keyboard::isKeyPressed(Keyboard::Left))
-			paddle.move(-5, 0);
-
-		if (FloatRect(ball_pos.x, ball_pos.y, 12, 12).intersects(paddle.getGlobalBounds()))
-			dy = -(rand() % 5 + 2);
-
-		ball.setPosition(ball_pos.x, ball_pos.y);
-
-		window.clear();
-		window.draw(background);
-		window.draw(ball);
-		window.draw(paddle);
-
-		for (auto& obj : blocks)
-			window.draw(obj);
-
-		window.display();
+		app.display();
 	}
 
 	return 0;
 }
+
+
+	
 
