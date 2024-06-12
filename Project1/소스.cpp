@@ -1,119 +1,90 @@
 #include <SFML/Graphics.hpp>
-#include <windows.h>
-#include <string>
 #include <vector>
-#include <iostream>
-
+#include <time.h>
 using namespace sf;
-using namespace std;
-
-class LunarLander {
-private:
-    double x, y;    //현재 위치
-    double velocity;    //속소
-    double fuel;    //연료
-    string status;  //현재 상태
-    Texture t1, t2;   //텍스처 객체
-    Sprite spaceship, burst;    //스프라이트 객체
-    Font font;  //폰트 객체
-    Text text;  //텍스트 객체
-public:
-    LunarLander(double h, double v, double f);  //생성자 함수
-    bool CheckLanded(); //착륙 검사 함수
-    void update(double rate);   //상태 업데이트 함수
-    void draw(RenderWindow& window);    //착륙선 그리는 함수
-
-};
-
-LunarLander::LunarLander(double h, double v, double f)
-{
-    x = 300;
-    y = h;
-    velocity = v;
-    fuel = f;
-    t1.loadFromFile("images/spaceship.png");
-    t2.loadFromFile("images/burst.png");
-    spaceship.setTexture(t1);
-    burst.setTexture(t2);
-    spaceship.setPosition(x, y);
-    burst.setPosition(x + 20, y + 50);
-    if (!font.loadFromFile("OpenSans-Bold.ttf")) {
-        cout << "폰트 파일을 오픈 할 수 없음!" << endl;
-    }
-    text.setFont(font);
-}
-
-bool LunarLander::CheckLanded()
-{
-    if (y <= 0)
-    {
-        return true;
-    }
-    return false;
-}
-
-void LunarLander::update(double amount)
-{
-    if (fuel <= 0)
-    {
-        fuel = 0;
-        amount = 0;
-    }
-    fuel -= amount; //소모한 연료를 제하고 남은 양
-    velocity = velocity - amount + 0.8; //연료 소모 대비 증가한 높이
-    y = y + velocity;
-    if (y > 450) y = 450;
-    spaceship.setPosition(x, y);
-    burst.setPosition(x + 20, y + 50);
-    status = "Press up Key! \nheight: " + to_string(y) + "\nspeed:" + to_string(velocity) + "\nfuel: " + to_string(fuel);
-}
-
-void LunarLander::draw(RenderWindow& window)
-{
-    window.draw(spaceship);
-    window.draw(burst);
-    text.setString(status);
-    text.setCharacterSize(20);
-    text.setPosition(10, 100);
-    window.draw(text);
-}
 
 int main()
 {
-    // 화면 생성하기
-    RenderWindow window(VideoMode(600, 480), "LUNER LANDER");
-    window.setFramerateLimit(60);
+	srand(time(NULL));
 
-    //스프라이트 생성하기
-    Texture t;
-    Sprite background;
-    t.loadFromFile("image/backgroound.png");
-    background.setTexture(t);
+	RenderWindow window(VideoMode(600, 480), "BREAKOUT");
+	window.setFramerateLimit(60);
 
-    //착룩선 객체 생성
-    LunarLander lander(300.0, 1.0, 100.0);
+	Texture t1, t2, t3, t4;
+	t1.loadFromFile("images/block.png");
+	t2.loadFromFile("images/background_ball.png");
+	t3.loadFromFile("images/ball.png");
+	t4.loadFromFile("images/paddle.png");
 
-    //게임 루프
-    while (window.isOpen())
-    {
-        Event e;
-        while (window.pollEvent(e)) {
-            if (e.type == Event::Closed)
-                window.close();
-        }
+	Sprite background(t2), ball(t3), paddle(t4);
+	paddle.setPosition(300, 460);
 
-        if (Keyboard::isKeyPressed(Keyboard::Up))
-            lander.update(3.0);
-        else
-            lander.update(0.0);
+	const int size = 100;
+	std::vector<Sprite> blocks(100);
+	int n = 0;
+	auto bsize = t1.getSize();
+	for (int i = 1; i <= 10; i++)
+		for (int j = 1; j <= 10; j++)
+		{
+			blocks[n].setTexture(t1);
+			blocks[n].setPosition(i * bsize.x, j * bsize.y);
+			n++;
+		}
 
-        window.clear();
-        window.draw(background);
-        lander.draw(window);
+	float dx = 3, dy = 3;
 
-        window.display();
-        Sleep(100);
-    }
-    return 0;
+	while (window.isOpen())
+	{
+		Event e;
+		while (window.pollEvent(e))
+		{
+			if (e.type == Event::Closed)
+				window.close();
+		}
+
+		auto ball_pos = ball.getPosition();
+
+		ball_pos.x += dx;
+		for (int i = 0; i < blocks.size(); i++) {
+			if (FloatRect(ball_pos.x + 3, ball_pos.y + 3, 6, 6).intersects(blocks[i].getGlobalBounds()))
+			{
+				blocks.erase(blocks.begin() + i);
+				dx = -dx;
+			}
+		}
+		ball_pos.y += dy;
+		for (int i = 0; i < blocks.size(); i++) {
+			if (FloatRect(ball_pos.x + 3, ball_pos.y + 3, 6, 6).intersects(blocks[i].getGlobalBounds()))
+			{
+				blocks.erase(blocks.begin() + i);
+				dy = -dy;
+			}
+		}
+
+		if (ball_pos.x < 0 || ball_pos.x>520)  dx = -dx;
+		if (ball_pos.y < 0 || ball_pos.y>450)  dy = -dy;
+
+		if (Keyboard::isKeyPressed(Keyboard::Right))
+			paddle.move(5, 0);
+		if (Keyboard::isKeyPressed(Keyboard::Left))
+			paddle.move(-5, 0);
+
+		if (FloatRect(ball_pos.x, ball_pos.y, 12, 12).intersects(paddle.getGlobalBounds()))
+			dy = -(rand() % 5 + 2);
+
+		ball.setPosition(ball_pos.x, ball_pos.y);
+
+		window.clear();
+		window.draw(background);
+		window.draw(ball);
+		window.draw(paddle);
+
+		for (auto& obj : blocks)
+			window.draw(obj);
+
+		window.display();
+	}
+
+	return 0;
 }
 
