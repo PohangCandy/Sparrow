@@ -1,32 +1,38 @@
 #include <iostream>
 using namespace std;
 
-class Box {
+class Counter {
 private:
-	double length;
-	double width;
-	double height;
-	static int count;
+	int value;
+
 public:
-	Box(double l = 2.0, double w = 2.0, double h = 2.0) : length(l), width(w), height(h) { count++; }
-	double Volume() {
-		return length * width * height;
+	Counter() : value(0) {};
+	~Counter() {}
+	int getValue() const { return value; }
+	void setValue(int x) { value = x; }
+
+	Counter& operator++()
+	{
+		++value;
+		return *this; 
 	}
 
-	void print() {
-		cout << count;
+	const Counter operator++(int)
+	{
+		Counter temp = { *this };
+		++value;
+		return temp;
 	}
 };
 
-int Box::count = 0;
 
-
-int main() 
+int main()
 {
-	Box b1;
-	Box b2;
-	Box b3;
-	b3.print();
+	Counter c;
+	Counter c1 = c++;
+	cout << c1.getValue() << endl;
+	Counter c2 = ++c;
+	cout << c.getValue();
 
 	return 0;
 }
