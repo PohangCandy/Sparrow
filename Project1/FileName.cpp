@@ -1,24 +1,32 @@
 #include <iostream>
 using namespace std;
 
-class Game {
+class Box {
+private:
+	double length;
+	double width;
+	double height;
+	static int count;
 public:
-	static int playercount;
+	Box(double l = 2.0, double w = 2.0, double h = 2.0) : length(l), width(w), height(h) { count++; }
+	double Volume() {
+		return length * width * height;
+	}
 
-	Game() { playercount++; }
-
-	void print() { cout << playercount << endl; }
+	void print() {
+		cout << count;
+	}
 };
 
-int Game::playercount = 0;
+int Box::count = 0;
 
 
-int main()
+int main() 
 {
-	Game player1;
-	Game player2;
-	player2.print();
-
+	Box b1;
+	Box b2;
+	Box b3;
+	b3.print();
 
 	return 0;
 }
