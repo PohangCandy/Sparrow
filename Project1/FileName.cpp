@@ -1,12 +1,21 @@
 #include <iostream>
 using namespace std;
 
+class Date {
+	int year, month, day;
+
+public:
+	Date(int y = 0,int m = 0,int d = 0): year(y), month(m), day(d) {}
+	bool equals(Date obj) {
+		return year == obj.year && month == obj.month && day == obj.day;
+	}
+};
+
+
 int main() {
-	unique_ptr<int> p(new int);
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
 
-	*p = 99; //p를 사용한다.
 
-	//여기서 지역 변수인 p가 삭제되면서 소멸자가 호출되고 소멸자에서
-	//동적 메모리도 함께 삭제되기 때문에 메모리 누수가 발생하지 않는다.
 	return 0;
 }
