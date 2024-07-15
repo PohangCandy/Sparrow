@@ -1,21 +1,37 @@
 #include <iostream>
 using namespace std;
 
-class Date {
-	int year, month, day;
-
+class Box {
+private:
+	double length;
+	double width;
+	double height;
 public:
-	Date(int y = 0,int m = 0,int d = 0): year(y), month(m), day(d) {}
-	bool equals(Date obj) {
-		return year == obj.year && month == obj.month && day == obj.day;
+	Box(int l = 0,int w = 0,int h = 0) : length(l),width(w),height(h){}
+	double getVolume(void)
+	{
+		return length * width * height;
 	}
+
+	friend void printBox(Box b);
+
 };
 
-
-int main() {
+int main()
+{
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL);
+	Box b1(10, 20, 30);
+	printBox(b1);
 
 
 	return 0;
+
+}
+
+void printBox(Box b)
+{
+	cout << b.length;
+	cout << b.width;
+	cout << b.height;
 }
