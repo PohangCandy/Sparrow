@@ -1,40 +1,67 @@
 #include <iostream>
 using namespace std;
 
-class Animal {
+
+class Person {
+	string job;
+	int age;
+	bool Cantalk;
+	bool CanWalk;
 public:
-	void speak()
+	Person(string j,int a,bool ct,bool cw):job(j),age(a),Cantalk(ct),CanWalk(cw){}
+	void print()
 	{
-		cout << "µ¿¹°ÀÌ ¼Ò¸®¸¦ ³»°í ÀÖÀ½" << endl;
+		cout << "ë‚˜ì´ : " << age << endl;
+		cout << "ì§ì—… : " << job << endl;
+		if (Cantalk == true)
+		{
+			cout << "ë§í•  ìˆ˜ ìžˆìŒ" << endl;
+		}
+		if (CanWalk == true)
+		{
+			cout << "ê±¸ì„ ìˆ˜ ìžˆìŒ" << endl;
+		}
 	}
 };
 
-class Dog : public Animal {
+class Professor : Person
+{
+	bool CanStudy;
 public:
-	void speak()
-	{
-		cout << "¸Û¸Û!" << endl;
+	Professor(string j, int a, bool ct, bool cw, bool cs) : Person(j, a, ct, cw), CanStudy(cs) {}
+
+	void print() {
+		Person::print();
+		if (CanStudy == true)
+		{
+			cout << "ê°€ë¥´ì¹  ìˆ˜ ìžˆìŒ" << endl;
+		}
 	}
 };
 
-class Cat : public Animal {
+class TennisPlayer : Person
+{
+	bool CanPlay;
 public:
-	void speak()
-	{
-		cout << "¾ß¿Ë!" << endl;
+	TennisPlayer(string j, int a, bool ct, bool cw, bool cp) : Person(j, a, ct, cw), CanPlay(cp) {}
+
+	void print() {
+		Person::print();
+		if (CanPlay == true)
+		{
+			cout << "í…Œë‹ˆìŠ¤ ê²½ê¸°ë¥¼ í•  ìˆ˜ ìžˆìŒ" << endl;
+		}
 	}
 };
+
 
 int main()
 {
-	ios_base::sync_with_stdio(false);
-	cin.tie(NULL);
 
-	Dog obj1;
-	obj1.speak();
-
-	Cat obj2;
-	obj2.speak();
+	Professor dumbledoor("êµìˆ˜", 39, true, true, true);
+	dumbledoor.print();
+	TennisPlayer jocobitch("í…Œë‹ˆìŠ¤ ì„ ìˆ˜", 23, true, true, true);
+	jocobitch.print();
 
 	return 0;
 }
