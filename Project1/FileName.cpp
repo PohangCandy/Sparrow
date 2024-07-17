@@ -1,67 +1,35 @@
 #include <iostream>
 using namespace std;
 
+class Animal {
+public:
+	virtual void speak() { cout << "Animal speak()" << endl; }
+};
 
-class Person {
-	string job;
+class Dog : public Animal {
+public:
 	int age;
-	bool Cantalk;
-	bool CanWalk;
-public:
-	Person(string j,int a,bool ct,bool cw):job(j),age(a),Cantalk(ct),CanWalk(cw){}
-	void print()
-	{
-		cout << "나이 : " << age << endl;
-		cout << "직업 : " << job << endl;
-		if (Cantalk == true)
-		{
-			cout << "말할 수 있음" << endl;
-		}
-		if (CanWalk == true)
-		{
-			cout << "걸을 수 있음" << endl;
-		}
-	}
+	void speak() { cout << "�۸�" << endl; }
 };
 
-class Professor : Person
-{
-	bool CanStudy;
+class Cat : public Animal {
 public:
-	Professor(string j, int a, bool ct, bool cw, bool cs) : Person(j, a, ct, cw), CanStudy(cs) {}
-
-	void print() {
-		Person::print();
-		if (CanStudy == true)
-		{
-			cout << "가르칠 수 있음" << endl;
-		}
-	}
-};
-
-class TennisPlayer : Person
-{
-	bool CanPlay;
-public:
-	TennisPlayer(string j, int a, bool ct, bool cw, bool cp) : Person(j, a, ct, cw), CanPlay(cp) {}
-
-	void print() {
-		Person::print();
-		if (CanPlay == true)
-		{
-			cout << "테니스 경기를 할 수 있음" << endl;
-		}
-	}
+	void speak() { cout << "�߿�" << endl; }
 };
 
 
 int main()
 {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
 
-	Professor dumbledoor("교수", 39, true, true, true);
-	dumbledoor.print();
-	TennisPlayer jocobitch("테니스 선수", 23, true, true, true);
-	jocobitch.print();
+	Animal* a1 = new Dog();
+	a1->speak();
+
+	Animal* a2 = new Cat();
+	a2->speak();
+
+	//a1->age = 10;
 
 	return 0;
 }
