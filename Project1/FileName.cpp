@@ -3,33 +3,28 @@ using namespace std;
 
 class Animal {
 public:
-	virtual void speak() { cout << "Animal speak()" << endl; }
+	string name;
+	Animal(string n) : name(n) {}
+
+	virtual void speak() { cout << "Animal Speak" << "\n"; }
+	virtual ~Animal() { cout << "ºÎ¸ðµ¿¹°ÀÇ ¼Ò¸êÀÚ" << "\n"; }
 };
 
 class Dog : public Animal {
 public:
-	int age;
-	void speak() { cout << "¸Û¸Û" << endl; }
-};
+	Dog(string n) : Animal(n) {}
 
-class Cat : public Animal {
-public:
-	void speak() { cout << "¾ß¿Ë" << endl; }
+	void speak() { cout << "¸Û¸Û" << "\n"; }
+	~Dog() { cout << "°³ÀÇ ¼Ò¸êÀÚ" << "\n"; }
 };
-
 
 int main()
 {
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL);
 
-	Animal* a1 = new Dog();
-	a1->speak();
-
-	Animal* a2 = new Cat();
-	a2->speak();
-
-	//a1->age = 10;
+	Animal* a = new Dog("ÇÃ¶õ´õ½º");
+	delete a;
 
 	return 0;
 }
