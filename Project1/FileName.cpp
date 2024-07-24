@@ -1,30 +1,55 @@
 #include <iostream>
 using namespace std;
 
-class Animal {
+//홈 네크워크의 가전 제품들을 원격 조종하기 위한 인테페이스
+class RemoteControl {
+	//순수 가상 함수 정의
 public:
-	string name;
-	Animal(string n) : name(n) {}
 
-	virtual void speak() { cout << "Animal Speak" << "\n"; }
-	virtual ~Animal() { cout << "부모동물의 소멸자" << "\n"; }
+	virtual void turnON() = 0; //가전 제품을 켠다
+	virtual void turnOFF() = 0; //가전 제품을 끈다
+	virtual void print() { cout << "print Remote"; }
 };
 
-class Dog : public Animal {
+class Television : public RemoteControl {
 public:
-	Dog(string n) : Animal(n) {}
 
-	void speak() { cout << "멍멍" << "\n"; }
-	~Dog() { cout << "개의 소멸자" << "\n"; }
+	void turnON()
+	{
+		//TV 전원을 켜기 위한 코드가 들어 간다.
+		cout << "TV turn On"<< endl;
+	}
+
+	void turnOFF()
+	{
+		//TV 전원을 끄기 위한 코드가 들어 간다.
+	}
+};
+
+class Refrigerator : public RemoteControl {
+public:
+
+	void turnON()
+	{
+		//TV 전원을 켜기 위한 코드가 들어 간다.
+		cout << "Refrigerator turn On" << endl;
+	}
+
+	void turnOFF()
+	{
+		//TV 전원을 끄기 위한 코드가 들어 간다.
+	}
 };
 
 int main()
 {
 	ios_base::sync_with_stdio(false);
-	cin.tie(NULL);
 
-	Animal* a = new Dog("플란더스");
-	delete a;
+	Television* pt = new Television();
+	pt->turnON();
+
+	Refrigerator* pr = new Refrigerator();
+	pr->turnON();
 
 	return 0;
 }
