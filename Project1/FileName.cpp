@@ -97,9 +97,50 @@ public:
 	{
 		//랜덤하게 이동
 		//25%확률로 상/하/좌/우 이동
-
+		int random = rand() % 4;
+		switch (random)
+		{
+		case (0):
+			this->x += 1;
+			break;
+		case (1):
+			this->x -= 1;
+			break;
+		case (2):
+			this->y += 1;
+			break;
+		case (3):
+			this->y -= 1;
+			break;
+		default:
+			break;
+		}
 	}
 };
+
+// 게임 규칙을 추가한다.
+// 플레이어와 적이 마주하면 게임이 종료된다.
+// 플레이어의 pos와 적의 pos를 비교해서 둘 다 일치하면,
+// 플레이어의 패배로 게임이 끝난다.
+class GameMode {
+	Hero h;
+	Enemy e;
+	Treasure t;
+public:
+	GameMode(Hero& _h,Enemy& _e,Treasure& _t):h(_h),e(_e),t(_t){}
+
+	bool checkGameOver()
+	{
+		return (h.getXpos() == e.getXpos() && h.getYpos() == e.getYpos());
+	}
+
+	bool checkPlyerWin()
+	{
+		return (h.getXpos() == t.getXpos() && h.getYpos() == t.getYpos());
+	}
+
+};
+
 
 
 //게임 설명과 실행 코드를 구분하기 위한 라인 출력
@@ -130,7 +171,6 @@ int main()
 	list.push_back(new Hero(0, 0));
 	list.push_back(new Treasure(height - 1, width - 1));
 	list.push_back(new Enemy(3,3));
-	
 
 	cout << "이 게임의 목표는 함정(T)이나 적(E)을 만나지 않고 보물에 도달하는 것이다.";
 	cout << "주인공은 a,s,w,d 키를 이용하여 움직일 수 있다." << endl;
