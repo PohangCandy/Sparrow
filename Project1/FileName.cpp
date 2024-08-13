@@ -1,31 +1,35 @@
 #include <iostream>
+#include <fstream>
 using namespace std;
-
-class Weapon {
-public:
-	virtual void load() = 0;
-};
-
-class Gun : public Weapon {
-	void load() { cout << "총을 적재합니다."; }
-};
-
-class Bomb : public Weapon {
-	void load() { cout << "폭탄을 적재합니다."; }
-};
 
 int main()
 {
-	ios_base::sync_with_stdio(false);
-
-	Weapon* a[3];
-	a[0] = new Gun();
-	a[1] = new Bomb();
-	a[2] = new Bomb();
-
-	for (auto& arr : a)
-	{
-		arr->load();
-		cout << "\n";
+	ifstream is("scores.txt");
+	ofstream os("result.txt");
+	if (is.fail()) {
+		cerr << "파일 오픈 실패" << endl;
+		exit(1);
 	}
+	if (os.fail()) {
+		cerr << "파일 오픈 실패" << endl;
+		exit(1);
+	}
+	
+	char c;
+	int line_number = 1;
+	is.get(c);
+	os << line_number << ": ";
+	while (!is.eof())
+	{
+		os << c;
+		if (c == '\n')
+		{
+			line_number++;
+			os << line_number << ": ";
+		}
+		is.get(c);
+	}
+
+
+	return 0;
 }
