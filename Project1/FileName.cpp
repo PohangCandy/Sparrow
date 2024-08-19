@@ -1,29 +1,35 @@
-#include <conio.h>
+#include <Windows.h>
 #include <iostream>
-#include <string>
 #include <fstream>
-#include <vector>
 using namespace std;
 
 int main()
 {
-	vector<string> words;
-	ifstream infile("d:/words.txt");
-	//파일 경로에 해당 파일이 없어서 잘못된건 아닐까?
+	HDC hdc = GetWindowDC(GetForegroundWindow());
 
-	while (infile)
+	//이진 파일을 쓰기 모드로 연다.
+	ifstream is("d:\\lena(256*256).raw", ifstream::binary);
+	if (is.fail())
 	{
-		string word;
-		infile >> word;
-		words.push_back(word);
+		cout << "d:\\lena(256*256).raw 파일을 열 수 없습니다." << endl;
+		exit(1);
 	}
+	int size = 256 * 256;
+	char* memblock = new char[size];
+	is.read(memblock, size);
+	is.close();
 
-	while (true)
+	int r, c;
+	for (r = 0; r < 256; r++)
 	{
-		string r = words[rand() % words.size()];
-		cout << "이번에 선택된 단어는 " << r << endl;
-		getch();
+		for (c = 0; c < 256; c++)
+		{
+			int red, green, blue;
+			red = green = blue = memblock[r * 256 + c];
+			SetPixel(hdc, c, r, RGB(red, green, blue));
+		}
 	}
+	delete memblock;
 
 	return 0;
 }
