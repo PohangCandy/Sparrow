@@ -1,35 +1,33 @@
-#include <Windows.h>
 #include <iostream>
-#include <fstream>
 using namespace std;
 
 int main()
 {
-	HDC hdc = GetWindowDC(GetForegroundWindow());
+	int pizza_slices = 12;
+	int persons = 0;
+	int slices_pre_person = 0;
 
-	//이진 파일을 쓰기 모드로 연다.
-	ifstream is("d:\\lena(256*256).raw", ifstream::binary);
-	if (is.fail())
-	{
-		cout << "d:\\lena(256*256).raw 파일을 열 수 없습니다." << endl;
-		exit(1);
-	}
-	int size = 256 * 256;
-	char* memblock = new char[size];
-	is.read(memblock, size);
-	is.close();
+	try {
+		cout << "피자 조각수를 입력하시오: ";
+		cin >> pizza_slices;
+		cout << "사람 수를 입력하시오: ";
+		cin >> persons;
 
-	int r, c;
-	for (r = 0; r < 256; r++)
-	{
-		for (c = 0; c < 256; c++)
-		{
-			int red, green, blue;
-			red = green = blue = memblock[r * 256 + c];
-			SetPixel(hdc, c, r, RGB(red, green, blue));
-		}
+		if (persons == 0)
+			throw persons;
+		if (persons < 0)
+			throw "negative";
+		slices_pre_person = pizza_slices / persons;
+		cout << "한 사람당 피자는 " << slices_pre_person << "입니다." << endl;
 	}
-	delete memblock;
+	catch (const char* e)
+	{
+		cout << "오류 : 사람수가 " << e << "입니다. ";
+	}
+	catch (int e)
+	{
+		cout << "오류 : 사람수가 " << e << "입니다. ";
+	}
 
 	return 0;
 }
