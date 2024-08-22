@@ -1,23 +1,27 @@
-
 #include <iostream>
-#include <cstring>  // For std::strcpy_s and std::strlen
-
 using namespace std;
 
-template<typename T1 , typename T2>
-void copy(T1 a1[], T2 a2[], int n)
+template<typename T>
+T getSmallest(T arr[],int size)
 {
-    for (int i = 0; i < n; ++i)
-    {
-        a1[i] = a2[i];
-    }
+	T min = arr[0];
+
+	for (int i = 0; i < size; i++)
+	{
+		if (min > arr[i])
+		{
+			min = arr[i];
+		}
+	}
+
+	return min;
 }
 
+int main()
+{
+	double list[] = { 1.2,3.3,9.0,1.5,8.7 };
+	int size = sizeof(list) / sizeof(list[0]);
+	cout << getSmallest(list,size);
 
-int main() {
-    int a[100];
-    double b[100];
-    copy(a, b, 100);
-
-    return 0;
+	return 0;
 }
