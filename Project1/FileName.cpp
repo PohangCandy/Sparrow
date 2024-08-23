@@ -1,27 +1,24 @@
 #include <iostream>
+#include <time.h>
+#include <list>
 using namespace std;
-
-template<typename T>
-T getSmallest(T arr[],int size)
-{
-	T min = arr[0];
-
-	for (int i = 0; i < size; i++)
-	{
-		if (min > arr[i])
-		{
-			min = arr[i];
-		}
-	}
-
-	return min;
-}
 
 int main()
 {
-	double list[] = { 1.2,3.3,9.0,1.5,8.7 };
-	int size = sizeof(list) / sizeof(list[0]);
-	cout << getSmallest(list,size);
+	ios_base::sync_with_stdio(false);
+	list<int> values;
+
+	srand(time(NULL));
+	for (int i = 0; i < 10; i++)
+	{
+		values.push_back(rand() % 100);
+	}
+	values.sort();
+
+	for (auto& e : values) {
+		std::cout << e << ' ';
+	}
+	std::cout << endl;
 
 	return 0;
 }
