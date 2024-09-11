@@ -1,29 +1,26 @@
-//짝수를 찾는 프로그램을 만들어본다.
-//count_if()를 사용한다.
+//맵을 만들고 키와 벨류값 반복자로 출력하기
+
 #include <iostream>
-#include <vector>
-#include <algorithm>
-
-template <typename T>
-bool is_even(const T& num)
-{
-	return num % 2 == 0;
-}
-
+#include <map>
 using namespace std;
+
+
 int main()
 {
 	ios_base::sync_with_stdio(false);
-	vector<int> vec;
+	cin.tie(0);
 
-	for (int i = 0; i < 10; i++)
+	map<string, int> m;
+
+	pair<string, int> e = { "a",100 };
+	m.insert(e);
+	auto it = m.begin();
+
+	while(it != m.end())
 	{
-		vec.push_back(i);
+		cout << "Key : " << e.first << " Value: " << e.second << "\n";
+		it++;
 	}
-
-	int n = count_if(vec.begin(), vec.end(), is_even<int>);
-
-	cout << "값이 짝수인 요소의 개수: " << n << "\n";
 
 	return 0;
 }
