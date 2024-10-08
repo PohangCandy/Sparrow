@@ -14,6 +14,10 @@ public:
 		setFillColor(Color(0, 255, 64)); // 사각형의 색깔 결정
 		setOrigin(0, 0); //사각형의 기준점 결정
 	}
+	void update(int x)
+	{
+		setPosition(x, init_y);
+	}
 };
 
 class Ball : public CircleShape
@@ -27,6 +31,8 @@ public:
 		setOrigin(0, 0); //공의 기준점 설정
 	}
 	void update();
+	bool isIntersecting(Paddle& paddle);
+	void handleCollision(Paddle& paddle);
 };
 
 void Ball::update()
@@ -50,6 +56,21 @@ void Ball::update()
 	}
 }
 
+bool Ball::isIntersecting(Paddle& paddle)
+{
+	return getGlobalBounds().intersects(paddle.getGlobalBounds());
+}
+
+void Ball::handleCollision(Paddle& paddle)
+{
+	if (!isIntersecting(paddle)) return;
+	speedy = -BALL_SPEED;
+	if (getPosition().x < paddle.getPosition().x)
+		speedx -= BALL_SPEED;
+	else
+		speedx = BALL_SPEED;
+}
+
 class Brick : public RectangleShape
 {
 public:
@@ -60,6 +81,16 @@ public:
 		setPosition(x, y);
 		setFillColor(Color::Yellow);
 		setOrigin(0, 0);
+	}
+	
+	bool isIntersecting(Ball& ball)
+	{
+		return getGlobalBounds().intersects(ball.getGlobalBounds());
+	}
+	void handleCollision(Ball& ball)
+	{
+		if (!isIntersecting(ball)) return;
+		deleted = true;
 	}
 };
 
@@ -90,7 +121,19 @@ int main()
 			if (event.type == sf::Event::Closed)
 				window.close();
 		}
+		sf::Vector2i position = sf::Mouse::getPosition(window);
+
+		paddle.update(position.x);
+
 		ball.update();
+		ball.handleCollision(paddle);
+		for (auto& brick : bricks)
+			brick.handleCollision(ball);
+		bricks.erase(remove_if(begin(bricks), end(bricks),
+			[](Brick& b)
+			{
+				return b.deleted;
+			}), end(bricks));
 
 		window.draw(ball);
 		window.draw(paddle);
